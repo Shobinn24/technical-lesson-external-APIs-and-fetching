@@ -1,14 +1,37 @@
 // Define the function to display astronauts
-
 // Function to display astronauts data
-// Hint: Create a function called displayAstronauts(data)
-// Hint: Select the <ul> element with the id "astronaut-list"
-// Hint: Loop through the data.people array and create <li> elements for each astronaut's name
-// Hint: Append the <li> elements to the <ul> element
+function displayAstronauts(data) {
+    const astronautList = document.getElementById("astronaut-list");
+// Clear any existing content
+    astronautList.innerHTML = '';
+    
+    // Loop through the array of astronauts and create list items
+    data.people.forEach(astronaut => {
+        const listItem = document.createElement("li");
+        listItem.textContent = astronaut.name;
+        astronautList.appendChild(listItem);
+    });
+}
+
+// funcgtion for error handling
+function handleError(error) {
+    const astronautList = document.getElementById("astronaut-list");
+    astronautList.innerHTML = `<li class="error">Error: ${error.message}</li>`;
+    console.error('Error fetching data:', error);
+    }
 
 // Fetch data from the external API
+fetch("http://api.open-notify.org/astros.json")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        displayAstronauts(data);
+    })
+    .catch(error => {
+        handleError(error);
+    });
 
-// Hint: Use fetch() to make an HTTP request to "http://api.open-notify.org/astros.json"
-// Hint: Use .then() to process the response and convert it to JSON
-// Hint: Call the displayAstronauts() function with the fetched data
-// Hint: Use .catch() to handle any errors that occur during the fetch process
